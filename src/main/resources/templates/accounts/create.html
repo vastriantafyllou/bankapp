@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::content})}">
+<body>
+<div th:fragment="content">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-plus-circle me-2"></i>Δημιουργία Νέου Λογαριασμού</h4>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/accounts/new}" th:object="${accountDTO}" method="post">
+                        
+                        <div class="mb-3">
+                            <label for="iban" class="form-label">IBAN</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-credit-card"></i></span>
+                                <input type="text" class="form-control" id="iban" th:field="*{iban}"
+                                       th:classappend="${#fields.hasErrors('iban')} ? 'is-invalid' : ''"
+                                       placeholder="π.χ. GR1234567890">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('iban')}" th:errors="*{iban}"></div>
+                            </div>
+                            <div class="form-text">Εισάγετε τουλάχιστον 5 χαρακτήρες</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="balance" class="form-label">Αρχικό Υπόλοιπο (€)</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-currency-euro"></i></span>
+                                <input type="number" step="0.01" min="0" class="form-control" id="balance" th:field="*{balance}"
+                                       th:classappend="${#fields.hasErrors('balance')} ? 'is-invalid' : ''"
+                                       placeholder="0.00">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('balance')}" th:errors="*{balance}"></div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-lg me-1"></i>Δημιουργία Λογαριασμού
+                            </button>
+                            <a th:href="@{/accounts}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>Επιστροφή
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

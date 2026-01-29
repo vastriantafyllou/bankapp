@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::content})}">
+<body>
+<div th:fragment="content">
+    <!-- Success Message -->
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle me-2"></i>
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Error Message -->
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        <span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="row">
+        <!-- Account Info Card -->
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-credit-card me-2"></i>Στοιχεία Λογαριασμού</h4>
+                </div>
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <small class="text-muted">IBAN</small>
+                        <h5 th:text="${account.iban}"></h5>
+                    </div>
+                    <hr>
+                    <div class="mb-3">
+                        <small class="text-muted">Τρέχον Υπόλοιπο</small>
+                        <div class="balance-display" th:classappend="${account.balance >= 0} ? 'text-success' : 'text-danger'"
+                             th:text="${#numbers.formatDecimal(account.balance, 1, 2)} + ' €'"></div>
+                    </div>
+                    <hr>
+                    <form th:action="@{/accounts/{iban}/delete(iban=${account.iban})}" method="post" 
+                          onsubmit="return confirm('Είστε σίγουροι ότι θέλετε να διαγράψετε αυτόν τον λογαριασμό;');">
+                        <button type="submit" class="btn btn-outline-danger">
+                            <i class="bi bi-trash me-1"></i>Διαγραφή Λογαριασμού
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transactions Card -->
+        <div class="col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-arrow-left-right me-2"></i>Συναλλαγές</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Deposit Form -->
+                    <form th:action="@{/accounts/{iban}/deposit(iban=${account.iban})}" method="post" class="mb-4">
+                        <h5 class="text-success"><i class="bi bi-arrow-down-circle me-1"></i>Κατάθεση</h5>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-currency-euro"></i></span>
+                            <input type="number" step="0.01" min="0.01" name="amount" class="form-control" 
+                                   placeholder="Ποσό κατάθεσης" required>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check-lg"></i> Κατάθεση
+                            </button>
+                        </div>
+                    </form>
+
+                    <hr>
+
+                    <!-- Withdraw Form -->
+                    <form th:action="@{/accounts/{iban}/withdraw(iban=${account.iban})}" method="post">
+                        <h5 class="text-danger"><i class="bi bi-arrow-up-circle me-1"></i>Ανάληψη</h5>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-currency-euro"></i></span>
+                            <input type="number" step="0.01" min="0.01" name="amount" class="form-control" 
+                                   placeholder="Ποσό ανάληψης" required>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-check-lg"></i> Ανάληψη
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a th:href="@{/accounts}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Επιστροφή στη Λίστα
+        </a>
+    </div>
+</div>
+</body>
+</html>
