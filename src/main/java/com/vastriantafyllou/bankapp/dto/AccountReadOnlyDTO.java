@@ -14,5 +14,6 @@ import java.math.BigDecimal;
 public class AccountReadOnlyDTO {
     private Long id;
     private String iban;
+    private String accountNumber;
     private BigDecimal balance;
 }
